@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/scene">
+        <file>src/scene/background.png</file>
+        <file>src/scene/scene2.png</file>
+        <file>src/scene/startScene.png</file>
+    </qresource>
+    <qresource prefix="/items">
+        <file>src/Items/enemy.png</file>
+        <file>src/Items/gameStartButton.png</file>
+        <file>src/Items/player.png</file>
+        <file>src/Items/wp_ball.png</file>
+        <file>src/Items/wp_enemy.png</file>
+    </qresource>
+    <qresource prefix="/FX">
+        <file>src/FX/shoot.mp3</file>
+    </qresource>
+    <qresource prefix="/bgm">
+        <file>src/bgm/Wonderland_Overture.mp3</file>
+    </qresource>
+</RCC>

@@ -40,10 +40,10 @@ public:
     Enemy(QGraphicsPixmapItem *parent = nullptr);
 
     //特定位置生成enemy
-    Enemy(QPointF pos);
+    void init(QPointF pos);
 
 
-    void move() override;
+    void move();
 };
 
 #endif // ROLE_H

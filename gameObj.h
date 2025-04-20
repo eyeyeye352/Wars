@@ -10,7 +10,6 @@ class gameObj : public QGraphicsPixmapItem
 
 public:
     gameObj(QGraphicsPixmapItem *parent = nullptr):QGraphicsPixmapItem{parent}{}
-    virtual void move(){}
 };
 
 

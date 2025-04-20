@@ -17,12 +17,10 @@ public:
 
     Bullet(QGraphicsPixmapItem *parent = nullptr);
 
-    //生成位置、子弹类型、子弹速度
-    Bullet(QPointF pos,int type);
+    //生成位置、子弹类型
+    void init(QPointF pos,int type);
 
-    void setType(int type);
-
-    void move() override;
+    void move();
 };
 
 #endif // BULLET_H

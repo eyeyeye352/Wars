@@ -4,15 +4,11 @@
 
 
 
-Bullet::Bullet(QGraphicsPixmapItem *parent):gameObj{parent}{
-    setPixmap(QPixmap(":/items/src/Items/wp_ball.png"));
-    setScale(0.1);
-}
+Bullet::Bullet(QGraphicsPixmapItem *parent):gameObj{parent}{}
 
-Bullet::Bullet(QPointF pos, int type)
+
+void Bullet::init(QPointF pos, int type)
 {
-
-
     switch (type) {
     case BulletType::P :
 
@@ -25,26 +21,10 @@ Bullet::Bullet(QPointF pos, int type)
         break;
     }
 
-    //子弹图像调整
     setScale(0.1);
     setPos(pos);
-
 }
 
-void Bullet::setType(int type)
-{
-    switch (type) {
-    case BulletType::P :
-
-        setPixmap(QPixmap(":/items/src/Items/wp_ball.png"));
-        break;
-
-    case BulletType::E :
-
-        setPixmap(QPixmap(":/items/src/Items/wp_enemy.png"));
-        break;
-    }
-}
 
 
 

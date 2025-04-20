@@ -30,7 +30,7 @@ public:
 
     static const int playerMoveSpeed = 4;
 
-    static const int playerShootInterval = 500;
+    static const int playerShootInterval = 400;
 
     static const int backgroundMoveSpeed = 2;
 

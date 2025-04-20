@@ -122,10 +122,9 @@ void Gamesys::playerShootBullet()
     QPointF shootPos = QPointF(player->sceneBoundingRect().right(),player->sceneBoundingRect().center().y());
 
     Bullet * bullet = gObjectPool::Instance()->takeBullet();
-    bullet->setPos(shootPos);
-    bullet->setType(BulletType::P);
+    bullet->init(shootPos,BulletType::P);
 
-    bulletList.append(bullet);
+    bulletList.push_back(bullet);
 
     //添加到场景
     scene->addItem(bullet);
@@ -139,7 +138,8 @@ void Gamesys::createEnemy()
     QPointF generatePos = QPointF(scene->sceneRect().right(),rand);
 
     Enemy * enemy = gObjectPool::Instance()->takeEnemy();
-    enemy->setPos(generatePos);
+
+    enemy->init(generatePos);
 
     enemyList.append(enemy);
 
@@ -154,8 +154,9 @@ void Gamesys::moveBullet()
     for (Bullet * b : bulletList) {
         b->move();
 
-        //越界
+        //跑出屏幕回收
         if(b->x() >= Gsettings::screenWidth){
+            qDebug() << "子弹回收";
             gObjectPool::Instance()->recycle(b);
             scene->removeItem(b);
             bulletList.removeOne(b);
@@ -165,13 +166,15 @@ void Gamesys::moveBullet()
     checkIfCollide();
 }
 
-//?
+
 void Gamesys::moveEnemy()
 {
     for (Enemy * e : enemyList) {
         e->move();
 
+        //跑出屏幕回收
         if(e->sceneBoundingRect().right() < 0){
+            qDebug() << "怪物回收";
             gObjectPool::Instance()->recycle(e);
             scene->removeItem(e);
             enemyList.removeOne(e);

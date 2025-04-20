@@ -11,7 +11,7 @@
 
 class gObjectPool : public QObject
 {
-    Q_OBJECT
+
     gObjectPool(QObject *parent = nullptr){}
 
     static gObjectPool * instance;

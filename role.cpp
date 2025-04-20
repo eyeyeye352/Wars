@@ -50,18 +50,15 @@ void Player::move(QList<int>& keyPressing)
 }
 
 
-Enemy::Enemy(QGraphicsPixmapItem *parent):Role{parent} {
-    setPixmap(QPixmap(":/items/src/Items/enemy.png"));
-    setScale(0.4);
-}
+Enemy::Enemy(QGraphicsPixmapItem *parent):Role{parent}{}
 
-
-Enemy::Enemy(QPointF pos){
-
+void Enemy::init(QPointF pos)
+{
     setPixmap(QPixmap(":/items/src/Items/enemy.png"));
     setScale(0.4);
     setPos(pos);
 }
+
 
 void Enemy::move(){
     moveBy(-Gsettings::enemyMoveSpeed,0);

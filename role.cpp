@@ -15,7 +15,7 @@ Player::Player(QGraphicsPixmapItem *parent):Role{parent}{
 }
 
 
-void Player::move()
+void Player::move(QList<int>& keyPressing)
 {
 
     QRectF border = scene()->sceneRect();
@@ -50,7 +50,10 @@ void Player::move()
 }
 
 
-Enemy::Enemy(QGraphicsPixmapItem *parent):Role{parent} {}
+Enemy::Enemy(QGraphicsPixmapItem *parent):Role{parent} {
+    setPixmap(QPixmap(":/items/src/Items/enemy.png"));
+    setScale(0.4);
+}
 
 
 Enemy::Enemy(QPointF pos){

@@ -7,6 +7,7 @@
 #include "musicsys.h"
 #include "role.h"
 #include "Gsettings.h"
+#include "gobjectpool.h"
 
 class Gamesys : public QWidget
 {
@@ -15,6 +16,8 @@ class Gamesys : public QWidget
 public:
     Gamesys(QWidget *parent = nullptr);
     ~Gamesys();
+
+    void init();
 
     //按键事件设定keyPressingList移动玩家
     virtual void keyPressEvent(QKeyEvent *event) override;
@@ -50,10 +53,9 @@ private:
     QTimer * enemyMoveTimer;
 
 
-
-    //子弹池、怪物池
     QList<Bullet*> bulletList;
-    QList<Enemy *> enemyList;
+    QList<Enemy*> enemyList;
+    QList<int> keyPressing;
 
 
 

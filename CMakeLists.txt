@@ -32,6 +32,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         gameObj.h
         role.h role.cpp
         Gsettings.h
+        gobjectpool.h gobjectpool.cpp
 
 
     )

@@ -19,7 +19,7 @@ MusicSys::MusicSys(QObject *parent)
     bgm->setAudioOutput(device1);
     shootSound->setAudioOutput(device2);
     device1->setVolume(Gsettings::musicVolumn);
-    device2->setVolume(Gsettings::musicVolumn);
+    device2->setVolume(Gsettings::musicVolumn * 2);
 
     //裁切射击音效
     connect(shootSound,&QMediaPlayer::positionChanged,[this]{

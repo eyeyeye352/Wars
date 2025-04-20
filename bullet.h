@@ -19,7 +19,8 @@ public:
 
     //生成位置、子弹类型、子弹速度
     Bullet(QPointF pos,int type);
-    ~Bullet() = default;
+
+    void setType(int type);
 
     void move() override;
 };

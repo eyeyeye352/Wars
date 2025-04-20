@@ -4,19 +4,30 @@ Gamesys::Gamesys(QWidget *parent)
     : QWidget(parent)
 {
 
-
     //窗口设置
     setFixedSize(Gsettings::screenWidth,Gsettings::screenHeight);
     setWindowIcon(QIcon(":/items/src/Items/wp_enemy.png"));
 
-    //背景音乐系统
-    Msys = new MusicSys(this);
+    init();
+
+}
+
+Gamesys::~Gamesys() {
+    delete player;
+}
+
+
+void Gamesys::init(){
+
+
 
     //初始化成员
     scene = new GameScene(this);
     startScene = new StartScene(this);
     view = new QGraphicsView(this);
     player = new Player();
+    Msys = new MusicSys(this);
+    gObjectPool::Instance()->init();
 
     scene->addItem(player);
     view->setSceneRect({0,0,Gsettings::screenWidth,Gsettings::screenHeight});
@@ -43,15 +54,8 @@ Gamesys::Gamesys(QWidget *parent)
     //开始游戏按钮关联
     connect(startScene->gameStartBtn,&QToolButton::clicked,this,&Gamesys::gameStart);
 
-
-
     view->show();
-
-
-
 }
-
-Gamesys::~Gamesys() {}
 
 
 void Gamesys::gameStart()
@@ -66,12 +70,10 @@ void Gamesys::gameStart()
     enemyMoveTimer->start(Gsettings::screenUpdateInterval);
 
     Msys->bgm->play();
+    Msys->shootSound->play();
 }
 
-void Gamesys::moveBackground()
-{
-    scene->move();
-}
+
 
 
 void Gamesys::keyPressEvent(QKeyEvent *event)
@@ -86,42 +88,48 @@ void Gamesys::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Left:
     case Qt::Key_D:
     case Qt::Key_Right:
-        player->keyPressing.append(event->key());
+        keyPressing.append(event->key());
         break;
     }
 }
 
 void Gamesys::keyReleaseEvent(QKeyEvent *event)
 {
-    if(player->keyPressing.contains(event->key())){
-        player->keyPressing.removeOne(event->key());
+    if(keyPressing.contains(event->key())){
+        keyPressing.removeOne(event->key());
     }
 }
 
 
 
+void Gamesys::moveBackground()
+{
+    scene->move();
+}
+
 
 void Gamesys::movePlayer()
 {
-    player->move();
+    player->move(keyPressing);
 }
 
 
 void Gamesys::playerShootBullet()
 {
+
+
     //在玩家位置创建子弹
     QPointF shootPos = QPointF(player->sceneBoundingRect().right(),player->sceneBoundingRect().center().y());
 
-    Bullet * bullet = new Bullet(shootPos,BulletType::P);
+    Bullet * bullet = gObjectPool::Instance()->takeBullet();
+    bullet->setPos(shootPos);
+    bullet->setType(BulletType::P);
+
+    bulletList.append(bullet);
 
     //添加到场景
     scene->addItem(bullet);
 
-    //添加到子弹池
-    bulletList.append(bullet);
-
-    //音效
-    Msys->shootSound->play();
 }
 
 void Gamesys::createEnemy()
@@ -130,38 +138,60 @@ void Gamesys::createEnemy()
     int rand = QRandomGenerator::global()->bounded(0,550);
     QPointF generatePos = QPointF(scene->sceneRect().right(),rand);
 
-    Enemy * enemy = new Enemy(generatePos);
+    Enemy * enemy = gObjectPool::Instance()->takeEnemy();
+    enemy->setPos(generatePos);
+
+    enemyList.append(enemy);
 
     //添加到场景
     scene->addItem(enemy);
 
-    //添加到怪物池
-    enemyList.append(enemy);
 }
 
-
+//?
 void Gamesys::moveBullet()
 {
     for (Bullet * b : bulletList) {
         b->move();
+
+        //越界
+        if(b->x() >= Gsettings::screenWidth){
+            gObjectPool::Instance()->recycle(b);
+            scene->removeItem(b);
+            bulletList.removeOne(b);
+        }
     }
+
     checkIfCollide();
 }
 
+//?
 void Gamesys::moveEnemy()
 {
     for (Enemy * e : enemyList) {
         e->move();
+
+        if(e->sceneBoundingRect().right() < 0){
+            gObjectPool::Instance()->recycle(e);
+            scene->removeItem(e);
+            enemyList.removeOne(e);
+        }
     }
 }
 
 void Gamesys::checkIfCollide()
 {
+
+
     for (Bullet* b : bulletList) {
         for (Enemy * e : enemyList) {
             if(b->collidesWithItem(e)){
                 scene->removeItem(e);
                 scene->removeItem(b);
+
+                gObjectPool::Instance()->recycle(b);
+                gObjectPool::Instance()->recycle(e);
+
                 bulletList.removeOne(b);
                 enemyList.removeOne(e);
             }

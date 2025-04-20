@@ -25,9 +25,7 @@ public:
 
     Player(QGraphicsPixmapItem *parent = nullptr);
 
-    void move() override;
-
-    QList<int> keyPressing;
+    void move(QList<int>&);
 
 };
 
@@ -43,6 +41,7 @@ public:
 
     //特定位置生成enemy
     Enemy(QPointF pos);
+
 
     void move() override;
 };

@@ -18,7 +18,7 @@ public:
     Bullet(QGraphicsPixmapItem *parent = nullptr);
 
     //生成位置、子弹类型
-    void init(QPointF pos,int type);
+    void beginAt(QPointF pos,int type);
 
     void move();
 };

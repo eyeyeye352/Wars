@@ -7,16 +7,14 @@
 Bullet::Bullet(QGraphicsPixmapItem *parent):gameObj{parent}{}
 
 
-void Bullet::init(QPointF pos, int type)
+void Bullet::beginAt(QPointF pos, int type)
 {
     switch (type) {
     case BulletType::P :
-
         setPixmap(QPixmap(":/items/src/Items/wp_ball.png"));
         break;
 
     case BulletType::E :
-
         setPixmap(QPixmap(":/items/src/Items/wp_enemy.png"));
         break;
     }

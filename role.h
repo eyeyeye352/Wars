@@ -4,11 +4,14 @@
 
 #include "gameObj.h"
 
+
 class Role : public gameObj
 {
 
 public:
     Role(QGraphicsPixmapItem *parent = nullptr);
+
+    virtual int getHP();
 
 protected:
     int HP;
@@ -27,6 +30,12 @@ public:
 
     void move(QList<int>&);
 
+    void beHitByEnemy();
+
+    void setHP(int);
+
+    int getHP();
+
 };
 
 
@@ -38,12 +47,16 @@ class Enemy : public Role
 
 public:
     Enemy(QGraphicsPixmapItem *parent = nullptr);
+    ~Enemy();
 
-    //特定位置生成enemy
-    void init(QPointF pos);
+    //受击
+    void beshot();
 
+    void setHP(int);
 
     void move();
+private:
+
 };
 
 #endif // ROLE_H

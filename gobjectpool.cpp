@@ -3,40 +3,32 @@
 
 gObjectPool * gObjectPool::instance = nullptr;
 
+gObjectPool::gObjectPool(QObject *parent)
+{
+    for (int x = 0; x < 20; ++x) {
+        bulletPool.enqueue(new Bullet);
+        enemyPool.enqueue(new Enemy);
+    }
+}
+
 gObjectPool::~gObjectPool()
 {
-    for (int x = 0; x < bulletPool.size(); ++x) {
-        Bullet * b = bulletPool.dequeue();
+    for (Bullet* b : bulletPool) {
         delete b;
-    }
-
-    for (int x = 0; x < enemyPool.size(); ++x) {
-        Enemy * e = enemyPool.dequeue();
+    }for (Enemy* e : enemyPool) {
         delete e;
     }
 }
 
-void gObjectPool::init()
-{
-    for (int x = 0; x < 20; ++x) {
-        Bullet * b = new Bullet();
-        Enemy * e = new Enemy();
-        bulletPool.enqueue(b);
-        enemyPool.enqueue(e);
-    }
-
-}
 
 Bullet *gObjectPool::takeBullet()
 {
-    Bullet * b = bulletPool.dequeue();
-    return b;
+    return bulletPool.dequeue();
 }
 
 Enemy *gObjectPool::takeEnemy()
 {
-    Enemy* e = enemyPool.dequeue();
-    return e;
+    return enemyPool.dequeue();
 }
 
 void gObjectPool::recycle(Bullet *obj)
@@ -46,5 +38,6 @@ void gObjectPool::recycle(Bullet *obj)
 
 void gObjectPool::recycle(Enemy *obj)
 {
+    obj->setHP(Gsettings::enemyHP);
     enemyPool.enqueue(obj);
 }

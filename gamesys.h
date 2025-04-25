@@ -34,6 +34,8 @@ public slots:
     void moveBullet();
     void moveEnemy();
 
+    void gameover();
+
 
     void checkIfCollide();
 

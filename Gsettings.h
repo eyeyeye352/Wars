@@ -17,6 +17,8 @@
 #include <QIcon>
 #include <QRandomGenerator>
 #include <QQueue>
+#include <QMessageBox>
+#include <QApplication>
 
 class Gsettings{
 

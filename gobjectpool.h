@@ -12,7 +12,7 @@
 class gObjectPool : public QObject
 {
 
-    gObjectPool(QObject *parent = nullptr){}
+    gObjectPool(QObject *parent = nullptr);
 
     static gObjectPool * instance;
 
@@ -26,8 +26,6 @@ public:
         }
         return instance;
     }
-
-    void init();
 
     Bullet* takeBullet();
     Enemy* takeEnemy();

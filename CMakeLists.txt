@@ -33,6 +33,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         role.h role.cpp
         Gsettings.h
         gobjectpool.h gobjectpool.cpp
+        fx.h fx.cpp
+
 
 
     )

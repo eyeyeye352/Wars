@@ -27,7 +27,6 @@ void Gamesys::init(){
     view = new QGraphicsView(this);
     player = new Player();
     Msys = new MusicSys(this);
-    gObjectPool::Instance()->init();
 
     scene->addItem(player);
     view->setSceneRect({0,0,Gsettings::screenWidth,Gsettings::screenHeight});
@@ -116,13 +115,11 @@ void Gamesys::movePlayer()
 
 void Gamesys::playerShootBullet()
 {
-
-
     //在玩家位置创建子弹
     QPointF shootPos = QPointF(player->sceneBoundingRect().right(),player->sceneBoundingRect().center().y());
 
     Bullet * bullet = gObjectPool::Instance()->takeBullet();
-    bullet->init(shootPos,BulletType::P);
+    bullet->beginAt(shootPos,BulletType::P);
 
     bulletList.push_back(bullet);
 
@@ -139,7 +136,7 @@ void Gamesys::createEnemy()
 
     Enemy * enemy = gObjectPool::Instance()->takeEnemy();
 
-    enemy->init(generatePos);
+    enemy->setPos(generatePos);
 
     enemyList.append(enemy);
 
@@ -156,7 +153,6 @@ void Gamesys::moveBullet()
 
         //跑出屏幕回收
         if(b->x() >= Gsettings::screenWidth){
-            qDebug() << "子弹回收";
             gObjectPool::Instance()->recycle(b);
             scene->removeItem(b);
             bulletList.removeOne(b);
@@ -174,12 +170,19 @@ void Gamesys::moveEnemy()
 
         //跑出屏幕回收
         if(e->sceneBoundingRect().right() < 0){
-            qDebug() << "怪物回收";
             gObjectPool::Instance()->recycle(e);
             scene->removeItem(e);
             enemyList.removeOne(e);
         }
     }
+}
+
+void Gamesys::gameover()
+{
+    QString msg("You've got %1 scores!");
+    this->hide();
+    QMessageBox::information(this,"gameover",msg.arg(scene->scoreBoard->getScore()));
+    QApplication::exit(0);
 }
 
 void Gamesys::checkIfCollide()
@@ -188,16 +191,36 @@ void Gamesys::checkIfCollide()
 
     for (Bullet* b : bulletList) {
         for (Enemy * e : enemyList) {
-            if(b->collidesWithItem(e)){
-                scene->removeItem(e);
-                scene->removeItem(b);
 
-                gObjectPool::Instance()->recycle(b);
+            if(e->collidesWithItem(player)){
+
+                player->beHitByEnemy();
+                scene->removeItem(e);
+                enemyList.removeOne(e);
                 gObjectPool::Instance()->recycle(e);
 
-                bulletList.removeOne(b);
-                enemyList.removeOne(e);
+                if(player->getHP() == 0){
+                    gameover();
+                }
             }
+
+            if(b->collidesWithItem(e)){
+
+                scene->removeItem(b);
+                bulletList.removeOne(b);
+                gObjectPool::Instance()->recycle(b);
+
+
+                e->beshot();
+
+                if(e->getHP() == 0){
+                    scene->removeItem(e);
+                    enemyList.removeOne(e);
+                    gObjectPool::Instance()->recycle(e);
+                    scene->scoreBoard->updateScore(scene->scoreBoard->getScore() + 1);
+                }
+            }
+
         }
     }
 }

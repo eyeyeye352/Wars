@@ -1,6 +1,12 @@
 #include "role.h"
+#include "fx.h"
 
 Role::Role(QGraphicsPixmapItem *parent):gameObj{parent}{}
+
+int Role::getHP()
+{
+    return HP;
+}
 
 
 
@@ -49,19 +55,51 @@ void Player::move(QList<int>& keyPressing)
     if(playerRect.right() > border.right()) setX(border.right() - playerRect.width());
 }
 
-
-Enemy::Enemy(QGraphicsPixmapItem *parent):Role{parent}{}
-
-void Enemy::init(QPointF pos)
+void Player::beHitByEnemy()
 {
+    --HP;
+    FX::getInstance()->playerBeHit(this);
+
+}
+
+void Player::setHP(int h)
+{
+    HP = h;
+}
+
+int Player::getHP()
+{
+    return HP;
+}
+
+
+Enemy::Enemy(QGraphicsPixmapItem *parent):Role{parent}{
+
     setPixmap(QPixmap(":/items/src/Items/enemy.png"));
     setScale(0.4);
-    setPos(pos);
+    HP = Gsettings::enemyHP;
+
+}
+
+Enemy::~Enemy()
+{
+}
+
+void Enemy::beshot()
+{
+    --HP;
+    FX::getInstance()->enemyBeShot(this);
+}
+
+void Enemy::setHP(int H)
+{
+    HP = H;
 }
 
 
 void Enemy::move(){
     moveBy(-Gsettings::enemyMoveSpeed,0);
 }
+
 
 
